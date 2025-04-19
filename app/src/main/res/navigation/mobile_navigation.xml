@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+        <fragment
+            android:id="@+id/item_home"
+            android:name="com.project.pkm_ud_lima.ui.fragment.HomeFragment"
+            tools:layout="@layout/fragment_home"
+            android:label="@string/nav_home" />
+
+        <fragment
+            android:id="@+id/item_catatan"
+            android:name="com.project.pkm_ud_lima.ui.fragment.CatatanFragment"
+            tools:layout="@layout/fragment_catatan"
+            android:label="@string/nav_catatan" />
+
+        <fragment
+            android:id="@+id/item_riwayat"
+            android:label="@string/nav_riwayat"
+            android:name="com.project.pkm_ud_lima.ui.fragment.RiwayatFragment"
+            tools:layout="@layout/fragment_riwayat" />
+</navigation>

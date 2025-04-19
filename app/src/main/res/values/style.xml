@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="RoundedCornerShape" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">30dp</item> <!-- Atur seberapa bulat -->
+    </style>
+
+    <style name="AlwaysRoundedShape">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">30dp</item> <!-- Sudut akan tetap 12dp -->
+    </style>
+</resources>

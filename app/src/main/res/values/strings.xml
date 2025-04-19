@@ -1,0 +1,64 @@
+<resources>
+    <string name="app_name">SIMPEDAP</string>
+
+    <!--    String bagian Home-->
+
+    <string name="judul_home">UD. LiMa</string>
+
+    <string name="card_dataharian">Data Harian</string>
+    <string name="card_maps">Maps</string>
+    <string name="card_graph">Grafik Data</string>
+    <string name="card_peringatan">Peringatan</string>
+    <string name="card_catatan">Catatan</string>
+    <string name="log_data">Log Data</string>
+    <string name="card_kontrolalat">Kontrol Alat</string>
+
+    <string name="card_cuacahari">Hari\nTanggal\nCuaca</string>
+    <string name="card_cuacasuhu">35</string>
+
+    <string name="card_suhucelsius">°</string>
+
+    <!--    String bagian Navigasi-->
+
+    <string name="nav_home">Home</string>
+    <string name="nav_catatan">Catatan</string>
+    <string name="nav_riwayat">Riwayat</string>
+
+    <!--    String bagian Peringatan-->
+
+    <string name="judul_peringatan">Peringatan</string>
+    <string name="judul_deteksi">Deteksi Kebakaran</string>
+    <string name="card_sos">SOS</string>
+
+    <!--    String bagian Catatan-->
+    <string name="judul_catatan">Judul</string>
+    <string name="deskripsi_catatan">Deskripsi</string>
+    <string name="tambah_catatan">Tambah</string>
+    <string name="hapus_catatan">Hapus</string>
+    <string name="tanggal_catatan">Tanggal</string>
+
+    <string name="message_undo">Batalkan menghapus catatan sebelumnya?</string>
+    <string name="message_ok">OK</string>
+    <string name="cancel">Batal</string>
+    <string name="empty">Bagian ini tidak bisa kosong</string>
+    <string name="update">Update</string>
+    <string name="change">Ubah</string>
+    <string name="add">Tambah</string>
+    <string name="save">Simpan</string>
+    <string name="yes">Ya</string>
+    <string name="no">Tidak</string>
+    <string name="message_cancel">Apakah Anda ingin membatalkan perubahan pada catatan?</string>
+    <string name="message_delete">Apakah Anda yakin ingin menghapus catatan ini?</string>
+    <string name="added">Catatan berhasil ditambahkan</string>
+    <string name="changed">Catatan berhasil diubah</string>
+    <string name="deleted">Catatan berhasil dihapus</string>
+
+    <!--    String bagian Navigasi Drawer-->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">SIMPEDAP</string>
+    <string name="nav_header_subtitle">SIMPEDAP</string>
+    <string name="nav_header_tentang">Tentang SIMPEDAP</string>
+    <string name="nav_header_bantuan">Bantuan &amp; Dukungan</string>
+    <string name="nav_header_instagram">Our Instagram</string>
+</resources>
