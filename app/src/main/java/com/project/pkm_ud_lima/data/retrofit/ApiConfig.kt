@@ -34,7 +34,7 @@ class ApiConfig {
         }
 
         fun getFlameService(): ApiService {
-            return getRetrofit("https://fireguardudlima.000webhostapp.com/").create(ApiService::class.java)
+            return getRetrofit("https://fireguardudlima.ltd/").create(ApiService::class.java)
         }
     }
 }

@@ -24,11 +24,16 @@ class PeringatanActivity : AppCompatActivity() {
             override fun onResponse(call: Call<FlameResponse>, response: Response<FlameResponse>) {
                 if (response.isSuccessful) {
                     val flameResponse = response.body()
-                    if (flameResponse != null) {
-                        val value = flameResponse.valueApi
-                        val jarak = flameResponse.jarakApi
-                        binding.tvValue.text = value.toString()
-                        binding.tvJarak.text = jarak.toString()
+                    val flameDataItem = flameResponse?.data?.firstOrNull()
+
+                    if (flameDataItem != null) {
+                        val value = flameDataItem.analogValue ?: "N/A"
+                        val keputusan = flameDataItem.keputusan ?: "Tidak diketahui"
+
+                        binding.tvValue.text = "Nilai Analog: $value"
+                        binding.tvJarak.text = "Status: $keputusan"
+                    } else {
+                        Toast.makeText(this@PeringatanActivity, "Data kosong", Toast.LENGTH_SHORT).show()
                     }
                 } else {
                     Toast.makeText(this@PeringatanActivity, "Data sensor tidak ditemukan", Toast.LENGTH_SHORT).show()

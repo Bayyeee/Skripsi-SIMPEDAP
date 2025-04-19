@@ -61,4 +61,6 @@
     <string name="nav_header_tentang">Tentang SIMPEDAP</string>
     <string name="nav_header_bantuan">Bantuan &amp; Dukungan</string>
     <string name="nav_header_instagram">Our Instagram</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

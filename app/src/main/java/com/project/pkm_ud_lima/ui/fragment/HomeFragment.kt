@@ -148,20 +148,26 @@ class HomeFragment : Fragment() {
         val mainActivity = activity as MainActivity
         val bottomNavView: BottomNavigationView = mainActivity.binding.navView
 
-        val cardCatatan: CardView = binding.CardCatatan
-        cardCatatan.setOnClickListener {
+        val cardLog: CardView = binding.CardLog
+        cardLog.setOnClickListener {
             val transaction = activity?.supportFragmentManager?.beginTransaction()
-            transaction?.replace(R.id.nav_host_fragment_activity_main, CatatanFragment())
+            transaction?.replace(R.id.nav_host_fragment_activity_main, LogDataFragment())
             transaction?.addToBackStack(null)
             transaction?.commit()
-
-            bottomNavView.selectedItemId = R.id.item_catatan
         }
 
         val cardPeringatan: CardView = binding.CardPeringatan
         cardPeringatan.setOnClickListener {
             val intent = Intent(context, PeringatanActivity::class.java)
             startActivity(intent)
+        }
+
+        val cardGrafik: CardView = binding.CardGrafik
+        cardGrafik.setOnClickListener {
+            val transaction = activity?.supportFragmentManager?.beginTransaction()
+            transaction?.replace(R.id.nav_host_fragment_activity_main, Grafikfragment())
+            transaction?.addToBackStack(null)
+            transaction?.commit()
         }
     }
 }

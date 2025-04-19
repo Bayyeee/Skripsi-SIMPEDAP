@@ -353,6 +353,7 @@
 
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/CardGrafik"
                     android:layout_width="150dp"
                     android:layout_height="140dp"
                     android:layout_marginTop="20dp"
@@ -483,7 +484,7 @@
 
                 <!--        Catatan-->
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/CardCatatan"
+                    android:id="@+id/CardLog"
                     android:layout_width="150dp"
                     android:layout_height="140dp"
                     android:layout_marginTop="20dp"

@@ -95,16 +95,21 @@ class FlameService : Service() {
                 if (response.isSuccessful) {
                     val flameResponse = response.body()
                     if (flameResponse != null) {
-                        val value = flameResponse.valueApi
-                        val jarak = flameResponse.jarakApi
-                        Log.d ("FlameService", "Value: $value, Jarak: $jarak")
-                        if (value in 900..4095 || jarak in 0..50 && shouldContinue) {
-                            sendNotification(
-                                "Api terdeteksi!",
-                                "Segera lakukan tindakan pencegahan."
-                            )
+                        val analogValue = flameResponse.data.firstOrNull()?.analogValue?.toIntOrNull()
+                        if (analogValue != null) {
+                            val voltase = (analogValue.toFloat() / 4095f) * 3.3f
+                            Log.d("FlameService", "Analog: $analogValue, Voltase: ${String.format("%.2f", voltase)}V")
+
+                            if (voltase > 2.1 && analogValue in 2100..3000 && shouldContinue) {
+                                sendNotification(
+                                    "Peringatan Kebakaran!",
+                                    "Api terdeteksi. Lakukan penyiraman sekarang."
+                                )
+                            } else {
+                                Log.d("FlameService", "Kondisi aman.")
+                            }
                         } else {
-                            Log.d ("FlameService", "Tidak ada api terdeteksi.")
+                            Log.d("FlameService", "Analog value tidak valid.")
                         }
                     }
                 }
@@ -113,6 +118,7 @@ class FlameService : Service() {
             }
         }
     }
+
 
     private fun sendNotification(title: String, message: String) {
         val notificationIntent: Intent

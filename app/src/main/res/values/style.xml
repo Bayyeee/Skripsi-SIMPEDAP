@@ -9,4 +9,20 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">30dp</item> <!-- Sudut akan tetap 12dp -->
     </style>
+
+    <style name="TableHeaderStyle">
+        <item name="android:padding">8dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:gravity">center</item>
+        <item name="android:fontFamily">@font/righteous</item>
+    </style>
+
+    <style name="TableCellStyle">
+        <item name="android:padding">8dp</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:gravity">center</item>
+        <item name="android:fontFamily">@font/righteous</item>
+    </style>
+
 </resources>

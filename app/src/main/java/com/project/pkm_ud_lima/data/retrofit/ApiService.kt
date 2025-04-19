@@ -1,6 +1,7 @@
 package com.project.pkm_ud_lima.data.retrofit
 
 import com.project.pkm_ud_lima.data.response.CuacaResponse
+import com.project.pkm_ud_lima.data.response.FlameDataItem
 import com.project.pkm_ud_lima.data.response.FlameResponse
 import retrofit2.Call
 import retrofit2.Response
@@ -20,6 +21,6 @@ interface ApiService {
     ) : Call<CuacaResponse>
 
     // Flame Sensor
-    @GET("api_json.php")
+    @GET("get_api.php")
     fun getFlame(): Call<FlameResponse>
 }

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/log_data"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.fragment.Grafikfragment">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:layout_marginTop="20dp">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Data Sensor"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"
+                    android:paddingBottom="16dp" />
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="horizontal">
+
+                    <TableLayout
+                        android:id="@+id/tableLayout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:stretchColumns="1,2,3,4"
+                        android:background="@drawable/table_border"
+                        android:padding="4dp">
+
+                        <!-- Header -->
+                        <TableRow android:background="#D0F0F0">
+                            <TextView android:text="Id"
+                                style="@style/TableHeaderStyle"
+                                android:fontFamily="@font/righteous" />
+                            <TextView android:text="Voltase"
+                                style="@style/TableHeaderStyle"
+                                android:fontFamily="@font/righteous" />
+                            <TextView android:text="Analog"
+                                style="@style/TableHeaderStyle"
+                                android:fontFamily="@font/righteous" />
+                            <TextView android:text="Keputusan"
+                                style="@style/TableHeaderStyle"
+                                android:fontFamily="@font/righteous" />
+                            <TextView android:text="Tanggal-Waktu"
+                                style="@style/TableHeaderStyle"
+                                android:fontFamily="@font/righteous" />
+                        </TableRow>
+
+                        <!-- Baris data akan ditambahkan dari Fragment -->
+                    </TableLayout>
+                </HorizontalScrollView>
+
+                <LinearLayout
+                    android:id="@+id/paginationContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingTop="16dp"
+                    android:layout_marginTop="8dp">
+
+                    <Button
+                        android:id="@+id/btnPrev"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sebelumnya"
+                        android:enabled="false"/>
+
+                    <Button
+                        android:id="@+id/btnNext"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Berikutnya"
+                        android:layout_marginStart="16dp"
+                        android:backgroundTint="?attr/colorPrimary"
+                        android:textColor="@android:color/white"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+    </FrameLayout>
+</androidx.drawerlayout.widget.DrawerLayout>
