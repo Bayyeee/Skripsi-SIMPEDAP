@@ -20,7 +20,10 @@ class PeringatanActivity : AppCompatActivity() {
 
         val apiService = ApiConfig.getFlameService()
 
-        apiService.getFlame().enqueue(object : Callback<FlameResponse> {
+        apiService.getFlamePaginated(
+            limit = 10,
+            offset = 0
+        ).enqueue(object : Callback<FlameResponse> {
             override fun onResponse(call: Call<FlameResponse>, response: Response<FlameResponse>) {
                 if (response.isSuccessful) {
                     val flameResponse = response.body()

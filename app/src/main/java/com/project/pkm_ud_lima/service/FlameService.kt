@@ -77,7 +77,7 @@ class FlameService : Service() {
             val channel = NotificationChannel("flameServiceChannel", name, importance).apply {
                 description = descriptionText
             }
-            val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val notificationManager: NotificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
     }
@@ -91,7 +91,10 @@ class FlameService : Service() {
         withContext(Dispatchers.IO) {
             val apiService = ApiConfig.getFlameService()
             try {
-                val response = apiService.getFlame().execute()
+                val response = apiService.getFlamePaginated(
+                    limit = 10,
+                    offset = 0
+                ).execute()
                 if (response.isSuccessful) {
                     val flameResponse = response.body()
                     if (flameResponse != null) {

@@ -14,6 +14,11 @@ data class FlameDataItem(
 
 // Wrapper
 data class FlameResponse(
-	@SerializedName("data") val data: List<FlameDataItem>
+	@SerializedName("data") val data: List<FlameDataItem>,
+	@SerializedName("total_data") val totalData: Int,
+	@SerializedName("limit") val limit: Int,
+	@SerializedName("offset") val offset: Int
 )
+
+
 

@@ -31,7 +31,8 @@
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:layout_gravity="center"
-                    android:paddingBottom="16dp" />
+                    android:layout_marginTop="-5dp"
+                    android:paddingBottom="10dp" />
 
                 <HorizontalScrollView
                     android:layout_width="match_parent"
@@ -69,33 +70,22 @@
                     </TableLayout>
                 </HorizontalScrollView>
 
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="horizontal">
+
                 <LinearLayout
                     android:id="@+id/paginationContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="horizontal"
-                    android:paddingTop="16dp"
-                    android:layout_marginTop="8dp">
-
-                    <Button
-                        android:id="@+id/btnPrev"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Sebelumnya"
-                        android:enabled="false"/>
-
-                    <Button
-                        android:id="@+id/btnNext"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Berikutnya"
-                        android:layout_marginStart="16dp"
-                        android:backgroundTint="?attr/colorPrimary"
-                        android:textColor="@android:color/white"/>
-
+                    android:paddingTop="10dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_gravity="center">
                 </LinearLayout>
-
+                </HorizontalScrollView>
             </LinearLayout>
         </ScrollView>
     </FrameLayout>

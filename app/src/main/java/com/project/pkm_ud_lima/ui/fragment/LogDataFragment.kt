@@ -1,15 +1,8 @@
 package com.project.pkm_ud_lima.ui.fragment
 
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TableLayout
-import android.widget.TableRow
-import android.widget.TextView
-import android.widget.Toast
+import android.view.*
+import android.widget.*
 import androidx.fragment.app.Fragment
 import com.project.pkm_ud_lima.R
 import com.project.pkm_ud_lima.data.response.FlameDataItem
@@ -22,10 +15,11 @@ import retrofit2.Response
 class LogDataFragment : Fragment() {
 
     private lateinit var tableLayout: TableLayout
+    private lateinit var paginationContainer: LinearLayout
     private var currentPage = 0
     private val itemsPerPage = 10
+    private var totalData = 0
     private var fullData: List<FlameDataItem> = emptyList()
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,55 +31,45 @@ class LogDataFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         tableLayout = view.findViewById(R.id.tableLayout)
+        paginationContainer = view.findViewById(R.id.paginationContainer)
 
-        val btnPrev = view.findViewById<Button>(R.id.btnPrev)
-        val btnNext = view.findViewById<Button>(R.id.btnNext)
-
-        btnPrev.setOnClickListener {
-            if ((currentPage + 1) * itemsPerPage < fullData.size) {
-                currentPage++
-                displayPage(currentPage)
-            }
-        }
-
-        btnNext.setOnClickListener {
-            if (currentPage > 0) {
-                currentPage--
-                displayPage(currentPage)
-            }
-        }
         getFlameData()
     }
 
     private fun getFlameData() {
-        ApiConfig.getFlameService().getFlame().enqueue(object : Callback<FlameResponse> {
-            override fun onResponse(call: Call<FlameResponse>, response: Response<FlameResponse>) {
-                if (response.isSuccessful) {
-                    fullData = response.body()?.data ?: emptyList()
-                    displayPage(currentPage)
-                } else {
-                    Toast.makeText(context, "Gagal memuat data", Toast.LENGTH_SHORT).show()
+        val offset = currentPage * itemsPerPage
+        ApiConfig.getFlameService().getFlamePaginated(itemsPerPage, offset)
+            .enqueue(object : Callback<FlameResponse> {
+                override fun onResponse(call: Call<FlameResponse>, response: Response<FlameResponse>) {
+                    if (response.isSuccessful) {
+                        val body = response.body()
+                        if (body != null) {
+                            fullData = body.data
+                            totalData = body.totalData
+                            displayPage()
+                        }
+                    } else {
+                        Toast.makeText(context, "Gagal memuat data", Toast.LENGTH_SHORT).show()
+                    }
                 }
-            }
 
-            override fun onFailure(call: Call<FlameResponse>, t: Throwable) {
-                Toast.makeText(context, "Gagal koneksi: ${t.message}", Toast.LENGTH_SHORT).show()
-            }
-        })
+                override fun onFailure(call: Call<FlameResponse>, t: Throwable) {
+                    Toast.makeText(context, "Gagal koneksi: ${t.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
     }
 
-    private fun displayPage(page: Int) {
-        tableLayout.removeViews(1, tableLayout.childCount - 1) // hapus baris kecuali header
+    private fun displayPage() {
+        tableLayout.removeViews(1, tableLayout.childCount - 1)
 
-        val totalItems = fullData.size
-        val start = totalItems - (page + 1) * itemsPerPage
-        val end = totalItems - page * itemsPerPage
+        if (fullData.isEmpty()) {
+            val row = TableRow(context)
+            row.addView(createCell("Data tidak ditemukan"))
+            tableLayout.addView(row)
+            return
+        }
 
-        if (start < 0) return // Jika sudah habis, tidak tampilkan apa-apa
-
-        val pageItems = fullData.subList(maxOf(0, start), minOf(end, totalItems))
-
-        for (data in pageItems.reversed()) { // reversed supaya data terbaru di atas
+        for (data in fullData) {
             val row = TableRow(context)
 
             val voltase = data.analogValue?.toIntOrNull()?.let {
@@ -102,24 +86,71 @@ class LogDataFragment : Fragment() {
             tableLayout.addView(row)
         }
 
-        updatePaginationButtons()
+        setupPaginationButtons()
     }
 
+    private fun setupPaginationButtons() {
+        paginationContainer.removeAllViews()
 
-    private fun updatePaginationButtons() {
-        val totalItems = fullData.size
-        val maxPages = totalItems / itemsPerPage
+        val totalPages = (totalData + itemsPerPage - 1) / itemsPerPage
+        val maxPagesToShow = 5
 
-        view?.findViewById<Button>(R.id.btnPrev)?.isEnabled = currentPage < maxPages
-        view?.findViewById<Button>(R.id.btnNext)?.isEnabled = currentPage > 0
+        var startPage = currentPage - 2
+        var endPage = currentPage + 3
+
+        if (startPage < 0) {
+            endPage += -startPage
+            startPage = 0
+        }
+        if (endPage > totalPages) {
+            startPage -= endPage - totalPages
+            endPage = totalPages
+            if (startPage < 0) startPage = 0
+        }
+
+        // Tombol Previous
+        if (currentPage > 0) {
+            val btnPrev = Button(requireContext())
+            btnPrev.text = "<"
+            btnPrev.setOnClickListener {
+                currentPage--
+                getFlameData()
+            }
+            paginationContainer.addView(btnPrev)
+        }
+
+        // Tombol Halaman
+        for (i in startPage until endPage) {
+            val btnPage = Button(requireContext())
+            btnPage.text = (i + 1).toString()
+            btnPage.setOnClickListener {
+                currentPage = i
+                getFlameData()
+            }
+
+            if (i == currentPage) {
+                btnPage.setBackgroundResource(R.drawable.active_page_background)
+            }
+
+            paginationContainer.addView(btnPage)
+        }
+
+        // Tombol Next
+        if (currentPage < totalPages - 1) {
+            val btnNext = Button(requireContext())
+            btnNext.text = ">"
+            btnNext.setOnClickListener {
+                currentPage++
+                getFlameData()
+            }
+            paginationContainer.addView(btnNext)
+        }
     }
-
-
 
     private fun createCell(text: String): TextView {
         val textView = TextView(context)
         textView.apply {
-            setPadding(16, 12, 16, 12) // padding dalam sel
+            setPadding(16, 12, 16, 12)
             textSize = 14f
             setText(text)
         }
@@ -128,10 +159,9 @@ class LogDataFragment : Fragment() {
             TableRow.LayoutParams.WRAP_CONTENT,
             TableRow.LayoutParams.WRAP_CONTENT
         )
-        params.setMargins(12, 12, 12, 12) // jarak antar sel
+        params.setMargins(12, 12, 12, 12)
         textView.layoutParams = params
 
         return textView
     }
-
 }

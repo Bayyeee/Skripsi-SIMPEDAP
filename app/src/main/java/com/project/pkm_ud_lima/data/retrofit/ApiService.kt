@@ -22,5 +22,9 @@ interface ApiService {
 
     // Flame Sensor
     @GET("get_api.php")
-    fun getFlame(): Call<FlameResponse>
+    fun getFlamePaginated(
+        @Query("limit") limit: Int,
+        @Query("offset") offset: Int
+    ): Call<FlameResponse>
+
 }
