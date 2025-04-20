@@ -11,5 +11,6 @@
     <color name="lightyellow">#FFFCB5</color>
     <color name="bluesky">#2196F3</color>
     <color name="blue">#2196F3</color>
+    <color name="blue_card">#005C97</color>
     <color name="purple_500">#6200EE</color>
 </resources>

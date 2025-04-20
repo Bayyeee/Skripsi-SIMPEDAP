@@ -1,122 +1,186 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     android:background="#F6FBFA"
     android:padding="16dp">
 
-    <!-- Back button dan Title -->
     <LinearLayout
-        android:id="@+id/headerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:orientation="vertical">
 
-        <ImageButton
-            android:id="@+id/backButton"
-            android:layout_width="wrap_content"
+        <!-- HEADER -->
+        <LinearLayout
+            android:id="@+id/headerLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_back"
-            android:contentDescription="Back" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-        <TextView
-            android:id="@+id/titleText"
-            android:layout_width="wrap_content"
+            <ImageButton
+                android:id="@+id/backButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_back"
+                android:contentDescription="Back" />
+
+            <TextView
+                android:id="@+id/titleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Grafik Data"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginStart="12dp" />
+        </LinearLayout>
+
+        <!-- CHART CONTAINER -->
+        <LinearLayout
+            android:id="@+id/chartContainer"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Grafik Data"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_marginStart="12dp"/>
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            android:padding="16dp"
+            android:background="@drawable/rounded_teal_background"
+            android:elevation="4dp"
+            android:gravity="center_horizontal">
+
+            <Spinner
+                android:id="@+id/spinnerRange"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end" />
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fillViewport="true"
+                android:scrollbars="none"
+                android:layout_marginTop="8dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/lineChart"
+                        android:layout_width="1000dp"
+                        android:layout_height="300dp"
+                        android:background="@android:color/white"
+                        android:elevation="2dp" />
+
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <LinearLayout
+                android:id="@+id/loadingLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <ProgressBar
+                    android:id="@+id/loadingProgressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Loading..."
+                    android:textSize="16sp"
+                    android:textColor="@android:color/darker_gray"
+                    android:layout_marginTop="8dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- CONVERSION DATA -->
+        <LinearLayout
+            android:id="@+id/conversionDataLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:background="@drawable/rounded_blue_background">
+
+            <TextView
+                android:id="@+id/conversionTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Konversi Analog Data"
+                android:textColor="@android:color/white"
+                android:layout_gravity="center"
+                android:fontFamily="@font/righteous"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
+
+            <TableLayout
+                android:id="@+id/conversionTable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:stretchColumns="*"
+                android:shrinkColumns="*"
+                android:padding="8dp"
+                android:background="@android:color/transparent">
+            </TableLayout>
+
+        </LinearLayout>
+
+
+        <!-- KETERANGAN -->
+        <LinearLayout
+            android:id="@+id/descriptionLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical"
+            android:padding="12dp"
+            android:background="@drawable/rounded_blue_background">
+
+            <TextView
+                android:id="@+id/descriptionTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/righteous"
+                android:text="KETERANGAN"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/descriptionDetail1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/righteous"
+                android:text="@string/tidak_ada_api"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:layout_marginTop="8dp"/>
+
+            <TextView
+                android:id="@+id/descriptionDetail2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/righteous"
+                android:text="@string/ada_api"
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
+        </LinearLayout>
+
     </LinearLayout>
 
-    <!-- Dropdown -->
-    <Spinner
-        android:id="@+id/spinnerRange"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/headerLayout"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="8dp" />
-
-    <!-- Chart -->
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/lineChart"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_below="@id/spinnerRange"
-        android:layout_marginTop="8dp"
-        android:background="@android:color/white"
-        android:elevation="2dp" />
-
-    <!-- Konversi Analog Data -->
-    <LinearLayout
-        android:id="@+id/conversionDataLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/lineChart"
-        android:layout_marginTop="12dp"
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:background="@drawable/rounded_blue_background">
-
-        <TextView
-            android:id="@+id/conversionTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/konversi_data"
-            android:textColor="@android:color/white"
-            android:fontFamily="@font/righteous"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <!-- List item manual atau RecyclerView -->
-
-    </LinearLayout>
-
-    <!-- Keterangan -->
-    <LinearLayout
-        android:id="@+id/descriptionLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/conversionDataLayout"
-        android:layout_marginTop="8dp"
-        android:orientation="vertical"
-        android:padding="12dp"
-        android:background="@drawable/rounded_blue_background">
-
-        <TextView
-            android:id="@+id/descriptionTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/righteous"
-            android:text="KETERANGAN"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:gravity="center"/>
-
-        <TextView
-            android:id="@+id/descriptionDetail1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/righteous"
-            android:text="@string/tidak_ada_api"
-            android:textColor="@android:color/white"
-            android:textSize="14sp"
-            android:layout_marginTop="8dp"/>
-
-        <TextView
-            android:id="@+id/descriptionDetail2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/righteous"
-            android:text="@string/ada_api"
-            android:textColor="@android:color/white"
-            android:textSize="14sp" />
-    </LinearLayout>
-
-</RelativeLayout>
+</ScrollView>
