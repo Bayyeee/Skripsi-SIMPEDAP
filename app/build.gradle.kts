@@ -77,4 +77,8 @@ dependencies {
     // GLIDE DAN ICON WEATHER
     implementation (libs.glide)
     annotationProcessor (libs.compiler)
+
+    // GRAFIK
+    implementation (libs.mpandroidchart)
+
 }

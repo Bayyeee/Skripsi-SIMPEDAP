@@ -14,6 +14,8 @@ loggingInterceptor = "4.11.0"
 material = "1.10.0"
 activity = "1.8.0"
 constraintlayout = "2.1.4"
+mpandroidchart = "v3.1.0"
+mpandroidchartVersion = "3.1.0"
 navigationFragmentKtx = "2.7.7"
 materialVersion = "1.11.0"
 navigationUiKtx = "2.7.7"
@@ -40,6 +42,9 @@ androidx-activity = { group = "androidx.activity", name = "activity", version.re
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 material-v1110 = { module = "com.google.android.material:material", version.ref = "materialVersion" }
 material-v1120 = { module = "com.google.android.material:material", version.ref = "googleMaterial" }
+mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchart" }
+#noinspection SimilarGradleDependency
+mpandroidchart-v310 = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchartVersion" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "converterGson" }
 
 [plugins]
