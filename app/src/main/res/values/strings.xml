@@ -63,10 +63,10 @@
     <string name="nav_header_instagram">Our Instagram</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    
+
     <!--   BAGIAN GRAFIK XML -->
     <string name="tidak_ada_api">DATA ANALOG 500-2099 = TIDAK TERJADI API</string>
     <string name="ada_api">DATA ANALOG 2100-4095 = TERJADI API ATAU TERIK MATAHARI PANAS</string>
 
-    <string name="konversi_data">Konversi Data Analog</string>
+    <string name="konversi_data">Konversi Data Analog Hari Ini</string>
 </resources>

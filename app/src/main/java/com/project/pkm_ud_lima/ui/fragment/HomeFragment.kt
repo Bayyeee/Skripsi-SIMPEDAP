@@ -169,5 +169,13 @@ class HomeFragment : Fragment() {
             transaction?.addToBackStack(null)
             transaction?.commit()
         }
+
+        val cardKontrol: CardView = binding.CardKontrol
+        cardKontrol.setOnClickListener {
+            val transaction = activity?.supportFragmentManager?.beginTransaction()
+            transaction?.replace(R.id.nav_host_fragment_activity_main, KontrollFragment())
+            transaction?.addToBackStack(null)
+            transaction?.commit()
+        }
     }
 }

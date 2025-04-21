@@ -117,7 +117,7 @@
                 android:id="@+id/conversionTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Konversi Analog Data"
+                android:text="@string/konversi_data"
                 android:textColor="@android:color/white"
                 android:layout_gravity="center"
                 android:fontFamily="@font/righteous"

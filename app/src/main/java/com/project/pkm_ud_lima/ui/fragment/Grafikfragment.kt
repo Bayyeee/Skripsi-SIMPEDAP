@@ -102,7 +102,7 @@ class Grafikfragment : Fragment() {
     private fun loadData() {
         showLoading(true)
 
-        ApiConfig.getFlameService().getFlamePaginated(16000, 0)
+        ApiConfig.getFlameService().getFlamePaginated(16515, 0)
             .enqueue(object : Callback<FlameResponse> {
                 override fun onResponse(call: Call<FlameResponse>, response: Response<FlameResponse>) {
                     showLoading(false)
@@ -276,6 +276,7 @@ class Grafikfragment : Fragment() {
                 background = ContextCompat.getDrawable(requireContext(), R.drawable.cell_border_grafik_tabel)
             }
             emptyRow.addView(emptyText)
+            animateRow(emptyRow)
             conversionTable.addView(emptyRow)
             return
         }
@@ -298,6 +299,7 @@ class Grafikfragment : Fragment() {
             }
             headerRow.addView(tv)
         }
+        animateRow(headerRow)
         conversionTable.addView(headerRow)
 
         // Data
@@ -305,7 +307,7 @@ class Grafikfragment : Fragment() {
             val analogValue = item.analogValue?.toIntOrNull() ?: 0
             val idHasil = item.idHasil ?: "-"
             val time = displayTime.format(date)
-            val status = if (analogValue in 1600..4095) "SIAGA" else "AMAN"
+            val status = if (analogValue in 2600..4095) "SIAGA" else "AMAN"
 
             val dataRow = TableRow(requireContext())
 
@@ -322,8 +324,20 @@ class Grafikfragment : Fragment() {
                 }
                 dataRow.addView(tv)
             }
+            animateRow(dataRow)
             conversionTable.addView(dataRow)
         }
+    }
+
+    // Function tambahan untuk animasi
+    private fun animateRow(row: TableRow) {
+        row.alpha = 0f
+        row.translationY = 50f
+        row.animate()
+            .alpha(1f)
+            .translationY(0f)
+            .setDuration(300)
+            .start()
     }
 
     private fun showLoading(isLoading: Boolean) {
