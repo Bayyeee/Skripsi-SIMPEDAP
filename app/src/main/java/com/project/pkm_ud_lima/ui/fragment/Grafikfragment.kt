@@ -102,7 +102,7 @@ class Grafikfragment : Fragment() {
     private fun loadData() {
         showLoading(true)
 
-        ApiConfig.getFlameService().getFlamePaginated(16515, 0)
+        ApiConfig.getFlameService().getFlamePaginated(16523, 0)
             .enqueue(object : Callback<FlameResponse> {
                 override fun onResponse(call: Call<FlameResponse>, response: Response<FlameResponse>) {
                     showLoading(false)
@@ -233,7 +233,7 @@ class Grafikfragment : Fragment() {
             isDragEnabled = true
             setScaleEnabled(true)
 
-            animateX(1000)
+            animateX(2000)
             invalidate()
         }
     }

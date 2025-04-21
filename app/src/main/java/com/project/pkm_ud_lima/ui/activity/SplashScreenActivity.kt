@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.project.pkm_ud_lima.R
 
@@ -19,8 +20,10 @@ class SplashScreenActivity : AppCompatActivity() {
 
         // Menambahkan SplashScreen dan animation
         val background : ImageView = findViewById(R.id.SplashScreenImage)
+        val text : TextView = findViewById(R.id.SplashScreenText)
         val slideanim = AnimationUtils.loadAnimation(this, R.anim.slide)
         background.startAnimation(slideanim)
+        text.startAnimation(slideanim)
 
         // untuk pindah ke halaman MainActivity
         Handler(Looper.getMainLooper()).postDelayed({

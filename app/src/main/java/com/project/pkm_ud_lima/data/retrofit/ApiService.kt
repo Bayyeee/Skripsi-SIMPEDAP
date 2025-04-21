@@ -1,8 +1,10 @@
 package com.project.pkm_ud_lima.data.retrofit
 
+import com.project.pkm_ud_lima.data.response.ControlStatusResponse
 import com.project.pkm_ud_lima.data.response.CuacaResponse
 import com.project.pkm_ud_lima.data.response.FlameDataItem
 import com.project.pkm_ud_lima.data.response.FlameResponse
+import com.project.pkm_ud_lima.data.response.UpdateRelayResponse
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
@@ -26,5 +28,15 @@ interface ApiService {
         @Query("limit") limit: Int,
         @Query("offset") offset: Int
     ): Call<FlameResponse>
+
+    // RELAY STATUS
+    @GET("controller_api.php")
+    fun getControlStatus(): Call<ControlStatusResponse>
+
+    @FormUrlEncoded
+    @POST("update_relay2_api.php")
+    fun updateRelay2(
+        @Field("relay_status") relayStatus: String
+    ): Call<UpdateRelayResponse>
 
 }

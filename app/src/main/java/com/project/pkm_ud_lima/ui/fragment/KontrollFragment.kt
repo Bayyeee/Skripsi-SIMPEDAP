@@ -6,10 +6,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.OvershootInterpolator
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import com.project.pkm_ud_lima.R
+import com.project.pkm_ud_lima.data.response.ControlStatusResponse
+import com.project.pkm_ud_lima.data.response.UpdateRelayResponse
+import com.project.pkm_ud_lima.data.retrofit.ApiConfig
+import retrofit2.Call
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -48,9 +53,56 @@ class KontrollFragment : Fragment() {
         relay2OffButton = view.findViewById(R.id.relay2OffButton)
 
         setupTimePickers()
+        loadTimes()
         setupRelayControls()
+        loadControlStatus()
+        setupSaveButton(view)
+
 
         return view
+    }
+
+    private fun loadControlStatus() {
+        val apiService = ApiConfig.getFlameService()
+        apiService.getControlStatus().enqueue(object : retrofit2.Callback<ControlStatusResponse> {
+            override fun onResponse(
+                call: Call<ControlStatusResponse>,
+                response: retrofit2.Response<ControlStatusResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val controlStatus = response.body()
+                    controlStatus?.let {
+                        // Update UI berdasarkan status relay yang diterima
+                        updateRelayUI(it)
+                        Toast.makeText(requireContext(), "Berhasil mengambil status kontrol", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(requireContext(), "Gagal mengambil status kontrol", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<ControlStatusResponse>, t: Throwable) {
+                Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun updateRelayUI(status: ControlStatusResponse) {
+        if (status.relay1Status == "ON") {
+            relay1OnButton.isEnabled = false
+            relay1OffButton.isEnabled = true
+        } else {
+            relay1OnButton.isEnabled = true
+            relay1OffButton.isEnabled = false
+        }
+
+        if (status.relay2Status == "ON") {
+            relay2OnButton.isEnabled = false
+            relay2OffButton.isEnabled = true
+        } else {
+            relay2OnButton.isEnabled = true
+            relay2OffButton.isEnabled = false
+        }
     }
 
     private fun setupTimePickers() {
@@ -73,8 +125,9 @@ class KontrollFragment : Fragment() {
             { _, hourOfDay, minute -> onTimeSelected(hourOfDay, minute) },
             calendar.get(Calendar.HOUR_OF_DAY),
             calendar.get(Calendar.MINUTE),
-            false
+            true
         )
+
         timePicker.show()
     }
 
@@ -83,7 +136,7 @@ class KontrollFragment : Fragment() {
             set(Calendar.HOUR_OF_DAY, hour)
             set(Calendar.MINUTE, minute)
         }
-        val sdf = SimpleDateFormat("hh:mm a", Locale.getDefault())
+        val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
         return sdf.format(calendar.time)
     }
 
@@ -105,13 +158,12 @@ class KontrollFragment : Fragment() {
             // TODO: Tambahkan logic matikan Relay 1
         }
 
-        // Relay 2
         relay2OnButton.setOnClickListener {
             animateButton(it)
             relay2OnButton.isEnabled = false
             relay2OffButton.isEnabled = true
             showToast("Relay Sistem 2 dinyalakan")
-            // TODO: Tambahkan logic nyalakan Relay 2
+            updateRelayStatus("ON")
         }
 
         relay2OffButton.setOnClickListener {
@@ -119,8 +171,9 @@ class KontrollFragment : Fragment() {
             relay2OffButton.isEnabled = false
             relay2OnButton.isEnabled = true
             showToast("Relay Sistem 2 dimatikan")
-            // TODO: Tambahkan logic matikan Relay 2
+            updateRelayStatus("OFF")
         }
+
 
         // Default kondisi awal
         relay1OnButton.isEnabled = true
@@ -132,6 +185,33 @@ class KontrollFragment : Fragment() {
     private fun showToast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
+
+    private fun updateRelayStatus(status: String) {
+        val apiService = ApiConfig.getFlameService()
+
+        apiService.updateRelay2(status).enqueue(object : retrofit2.Callback<UpdateRelayResponse> {
+            override fun onResponse(
+                call: Call<UpdateRelayResponse>,
+                response: retrofit2.Response<UpdateRelayResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val body = response.body()
+                    if (body != null && body.success) {
+                        Toast.makeText(requireContext(), body.message, Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(requireContext(), body?.message ?: "Gagal update", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(requireContext(), "Gagal: ${response.code()}", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<UpdateRelayResponse>, t: Throwable) {
+                Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
 
     private fun animateButton(view: View) {
         view.animate()
@@ -146,5 +226,45 @@ class KontrollFragment : Fragment() {
                     .start()
             }
             .start()
+    }
+
+    private fun setupSaveButton(view: View) {
+        val saveButton = view.findViewById<Button>(R.id.saveButton)
+        saveButton.setOnClickListener { v ->
+            v.animate()
+                .scaleX(0.95f)
+                .scaleY(0.95f)
+                .setDuration(100)
+                .withEndAction {
+                    v.animate()
+                        .scaleX(1f)
+                        .scaleY(1f)
+                        .setDuration(300)
+                        .setInterpolator(OvershootInterpolator())
+                        .withEndAction {
+                            saveTimes()
+                            Toast.makeText(requireContext(), "Waktu berhasil disimpan", Toast.LENGTH_SHORT).show()
+                        }
+                        .start()
+                }
+                .start()
+        }
+    }
+
+    private fun saveTimes() {
+        val sharedPref = requireContext().getSharedPreferences("TimeSettings", 0)
+        val editor = sharedPref.edit()
+        editor.putString("startTime", startTimeTextView.text.toString())
+        editor.putString("endTime", endTimeTextView.text.toString())
+        editor.apply()
+    }
+
+    private fun loadTimes() {
+        val sharedPref = requireContext().getSharedPreferences("TimeSettings", 0)
+        val savedStartTime = sharedPref.getString("startTime", "00:00")
+        val savedEndTime = sharedPref.getString("endTime", "00:00")
+
+        startTimeTextView.text = savedStartTime
+        endTimeTextView.text = savedEndTime
     }
 }
