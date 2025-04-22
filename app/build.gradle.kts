@@ -81,4 +81,5 @@ dependencies {
     // GRAFIK
     implementation (libs.mpandroidchart)
 
+    // WORKMANEGER
 }
