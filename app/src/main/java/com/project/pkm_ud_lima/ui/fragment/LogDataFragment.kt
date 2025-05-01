@@ -1,5 +1,6 @@
 package com.project.pkm_ud_lima.ui.fragment
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.*
 import android.widget.*
@@ -11,15 +12,20 @@ import com.project.pkm_ud_lima.data.retrofit.ApiConfig
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
 
 class LogDataFragment : Fragment() {
 
     private lateinit var tableLayout: TableLayout
     private lateinit var paginationContainer: LinearLayout
+    private lateinit var dateInput: EditText
+    private lateinit var searchButton: Button
+
     private var currentPage = 0
     private val itemsPerPage = 10
     private var totalData = 0
     private var fullData: List<FlameDataItem> = emptyList()
+    private var selectedDate: String? = null // format yyyy-MM-dd
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,31 +38,62 @@ class LogDataFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         tableLayout = view.findViewById(R.id.tableLayout)
         paginationContainer = view.findViewById(R.id.paginationContainer)
+        dateInput = view.findViewById(R.id.dateInput)
+        searchButton = view.findViewById(R.id.searchButton)
+
+        dateInput.setOnClickListener {
+            showDatePickerDialog()
+        }
+
+        searchButton.setOnClickListener {
+            currentPage = 0
+            getFlameData()
+        }
 
         getFlameData()
     }
 
+    private fun showDatePickerDialog() {
+        val calendar = Calendar.getInstance()
+        val datePickerDialog = DatePickerDialog(requireContext(),
+            { _, year, month, dayOfMonth ->
+                val date = String.format("%04d-%02d-%02d", year, month + 1, dayOfMonth)
+                selectedDate = date
+                dateInput.setText(date)
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        )
+        datePickerDialog.show()
+    }
+
     private fun getFlameData() {
         val offset = currentPage * itemsPerPage
-        ApiConfig.getFlameService().getFlamePaginated(itemsPerPage, offset)
-            .enqueue(object : Callback<FlameResponse> {
-                override fun onResponse(call: Call<FlameResponse>, response: Response<FlameResponse>) {
-                    if (response.isSuccessful) {
-                        val body = response.body()
-                        if (body != null) {
-                            fullData = body.data
-                            totalData = body.totalData
-                            displayPage()
-                        }
-                    } else {
-                        Toast.makeText(context, "Gagal memuat data", Toast.LENGTH_SHORT).show()
-                    }
-                }
+        val apiCall: Call<FlameResponse> = if (!selectedDate.isNullOrEmpty()) {
+            ApiConfig.getFlameService().getFlamePaginated(itemsPerPage, offset, selectedDate!!)
+        } else {
+            ApiConfig.getFlameService().getFlamePaginated(itemsPerPage, offset, "")
+        }
 
-                override fun onFailure(call: Call<FlameResponse>, t: Throwable) {
-                    Toast.makeText(context, "Gagal koneksi: ${t.message}", Toast.LENGTH_SHORT).show()
+        apiCall.enqueue(object : Callback<FlameResponse> {
+            override fun onResponse(call: Call<FlameResponse>, response: Response<FlameResponse>) {
+                if (response.isSuccessful) {
+                    val body = response.body()
+                    if (body != null) {
+                        fullData = body.data
+                        totalData = body.totalData
+                        displayPage()
+                    }
+                } else {
+                    Toast.makeText(context, "Gagal memuat data", Toast.LENGTH_SHORT).show()
                 }
-            })
+            }
+
+            override fun onFailure(call: Call<FlameResponse>, t: Throwable) {
+                Toast.makeText(context, "Gagal koneksi: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     private fun displayPage() {
@@ -108,7 +145,6 @@ class LogDataFragment : Fragment() {
             if (startPage < 0) startPage = 0
         }
 
-        // Tombol Previous
         if (currentPage > 0) {
             val btnPrev = Button(requireContext())
             btnPrev.text = "<"
@@ -119,7 +155,6 @@ class LogDataFragment : Fragment() {
             paginationContainer.addView(btnPrev)
         }
 
-        // Tombol Halaman
         for (i in startPage until endPage) {
             val btnPage = Button(requireContext())
             btnPage.text = (i + 1).toString()
@@ -135,7 +170,6 @@ class LogDataFragment : Fragment() {
             paginationContainer.addView(btnPage)
         }
 
-        // Tombol Next
         if (currentPage < totalPages - 1) {
             val btnNext = Button(requireContext())
             btnNext.text = ">"
