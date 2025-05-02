@@ -15,12 +15,31 @@ import retrofit2.Response
 
 class PeringatanActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPeringatanBinding
-    private lateinit var mediaPlayer: MediaPlayer
+    private var mediaPlayer: MediaPlayer? = null
+
+    private fun startSirene() {
+        mediaPlayer = MediaPlayer.create(this, R.raw.sirene)
+        mediaPlayer?.let {
+            it.isLooping = true
+            it.start()
+        }
+    }
+
+    private fun stopSirene() {
+        if (mediaPlayer?.isPlaying == true) {
+            mediaPlayer?.stop()
+            mediaPlayer?.release()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPeringatanBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.backButton.setOnClickListener {
+            finish()
+        }
 
         val apiService = ApiConfig.getFlameService()
 
@@ -39,6 +58,17 @@ class PeringatanActivity : AppCompatActivity() {
 
                         binding.tvValue.text = "Nilai Analog: $value"
                         binding.tvJarak.text = "Status: $keputusan"
+
+                        if (keputusan.equals("Aman", ignoreCase = true)) {
+                            // Jika Aman, ubah warna dan teks
+                            binding.tvSOS.text = "AMAN"
+                            binding.tvSOS.backgroundTintList = getColorStateList(R.color.green)
+                            stopSirene()
+                        } else {
+                            // Jika Bahaya, putar sirene
+                            startSirene()
+                        }
+
                     } else {
                         Toast.makeText(this@PeringatanActivity, "Data kosong", Toast.LENGTH_SHORT).show()
                     }
@@ -56,13 +86,15 @@ class PeringatanActivity : AppCompatActivity() {
         binding.tvSOS.startAnimation(pulseAnimation)
 
         mediaPlayer = MediaPlayer.create(this, R.raw.sirene)
-        mediaPlayer.isLooping = true // agar berulang
-        mediaPlayer.start()
+        mediaPlayer?.let {
+            it.isLooping = true
+            it.start()
+        }
 
         binding.btnMatikan.setOnClickListener {
-            if (::mediaPlayer.isInitialized && mediaPlayer.isPlaying) {
-                mediaPlayer.stop()
-                mediaPlayer.release()
+            if (mediaPlayer?.isPlaying == true) {
+                mediaPlayer?.stop()
+                mediaPlayer?.release()
             }
             finish() // tutup activity jika perlu
         }
@@ -70,9 +102,15 @@ class PeringatanActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        if (::mediaPlayer.isInitialized && mediaPlayer.isPlaying) {
-            mediaPlayer.stop()
-            mediaPlayer.release()
+        try {
+            if (mediaPlayer?.isPlaying == true) {
+                mediaPlayer?.stop()
+            }
+            mediaPlayer?.release()
+        } catch (e: IllegalStateException) {
+            e.printStackTrace()
+        } finally {
+            mediaPlayer = null
         }
     }
 }
