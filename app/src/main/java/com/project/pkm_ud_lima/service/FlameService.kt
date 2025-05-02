@@ -43,10 +43,10 @@ class FlameService : Service() {
         val notification: Notification = NotificationCompat.Builder(this, "flameServiceChannel")
             .setContentTitle("FireGuard")
             .setContentText("Mendeteksi api...")
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.mipmap.logo5_background)
             .setContentIntent(pendingIntent)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-            .addAction(R.drawable.ic_launcher_foreground, "Matikan", stopServicePendingIntent)
+            .addAction(R.mipmap.logo5_background, "Matikan", stopServicePendingIntent)
             .build()
 
         startForeground(1, notification)
@@ -122,13 +122,15 @@ class FlameService : Service() {
         }
     }
 
-
     private fun sendNotification(title: String, message: String) {
         val notificationIntent: Intent
         var requestCode = 0
 
-        if (title == "Api terdeteksi") {
-            notificationIntent = Intent(this, PeringatanActivity::class.java)
+        if (title == "Peringatan Kebakaran!") {
+            notificationIntent = Intent(this, PeringatanActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            }
+            startActivity(notificationIntent) // <--- Inisiasi pindah ke Activity
             requestCode = 1
         } else {
             notificationIntent = Intent(this, MainActivity::class.java)
@@ -148,10 +150,10 @@ class FlameService : Service() {
         val notification: Notification = NotificationCompat.Builder(this, "flameServiceChannel")
             .setContentTitle(title)
             .setContentText(message)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.mipmap.logo5_background)
             .setContentIntent(pendingIntent)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-            .addAction(R.drawable.ic_launcher_foreground, "Matikan", stopServicePendingIntent)
+            .addAction(R.mipmap.logo5_background, "Matikan", stopServicePendingIntent)
             .build()
 
         startForeground(1, notification)

@@ -102,7 +102,7 @@ class Grafikfragment : Fragment() {
     private fun loadData() {
         showLoading(true)
 
-        ApiConfig.getFlameService().getFlamePaginated(16523, 0)
+        ApiConfig.getFlameService().getFlamePaginated(30000, 0)
             .enqueue(object : Callback<FlameResponse> {
                 override fun onResponse(call: Call<FlameResponse>, response: Response<FlameResponse>) {
                     showLoading(false)
