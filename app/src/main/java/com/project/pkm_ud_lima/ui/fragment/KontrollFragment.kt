@@ -1,6 +1,10 @@
 package com.project.pkm_ud_lima.ui.fragment
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.app.TimePickerDialog
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,6 +18,7 @@ import com.project.pkm_ud_lima.R
 import com.project.pkm_ud_lima.data.response.ControlStatusResponse
 import com.project.pkm_ud_lima.data.response.UpdateRelayResponse
 import com.project.pkm_ud_lima.data.retrofit.ApiConfig
+import com.project.pkm_ud_lima.receiver.RelayControlReceiver
 import retrofit2.Call
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -242,8 +247,11 @@ class KontrollFragment : Fragment() {
                         .setDuration(300)
                         .setInterpolator(OvershootInterpolator())
                         .withEndAction {
+                            val startTime = startTimeTextView.text.toString()
+                            val endTime = endTimeTextView.text.toString()
                             saveTimes()
-                            Toast.makeText(requireContext(), "Waktu berhasil disimpan", Toast.LENGTH_SHORT).show()
+                            scheduleRelayTimers(startTime, endTime) // <- ini yang penting
+                            Toast.makeText(requireContext(), "Waktu berhasil disimpan & penjadwalan relay aktif", Toast.LENGTH_SHORT).show()
                         }
                         .start()
                 }
@@ -257,6 +265,42 @@ class KontrollFragment : Fragment() {
         editor.putString("startTime", startTimeTextView.text.toString())
         editor.putString("endTime", endTimeTextView.text.toString())
         editor.apply()
+    }
+
+    private fun scheduleRelayTimers(startTime: String, endTime: String) {
+        val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
+
+        val startCalendar = Calendar.getInstance().apply {
+            time = sdf.parse(startTime)!!
+            if (before(Calendar.getInstance())) {
+                add(Calendar.DATE, 1) // jadwalkan besok jika waktunya sudah lewat hari ini
+            }
+        }
+
+        val endCalendar = Calendar.getInstance().apply {
+            time = sdf.parse(endTime)!!
+            if (before(Calendar.getInstance())) {
+                add(Calendar.DATE, 1)
+            }
+        }
+
+        val startIntent = Intent(requireContext(), RelayControlReceiver::class.java).apply {
+            putExtra("ACTION", "ON")
+        }
+        val startPendingIntent = PendingIntent.getBroadcast(
+            requireContext(), 100, startIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, startCalendar.timeInMillis, startPendingIntent)
+
+        val endIntent = Intent(requireContext(), RelayControlReceiver::class.java).apply {
+            putExtra("ACTION", "OFF")
+        }
+        val endPendingIntent = PendingIntent.getBroadcast(
+            requireContext(), 101, endIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, endCalendar.timeInMillis, endPendingIntent)
     }
 
     private fun loadTimes() {

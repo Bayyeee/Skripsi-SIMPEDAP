@@ -19,6 +19,3 @@ data class FlameResponse(
 	@SerializedName("limit") val limit: Int,
 	@SerializedName("offset") val offset: Int
 )
-
-
-

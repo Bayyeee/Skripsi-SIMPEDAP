@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <application
         android:allowBackup="true"
@@ -40,6 +41,9 @@
         <service
             android:name=".service.FlameService"
             android:foregroundServiceType="dataSync" />
+
+        <!-- Tambahkan receiver di sini -->
+        <receiver android:name=".receiver.RelayControlReceiver" />
     </application>
 
 </manifest>
